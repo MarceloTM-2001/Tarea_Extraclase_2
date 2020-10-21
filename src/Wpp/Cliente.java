@@ -9,10 +9,13 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Lenovo
  */
+
 public class Cliente {
     public static void main (String[] args){
 
@@ -32,6 +35,7 @@ class MarcoCliente extends JFrame{
 }
 
 class LaminaMarcoCliente extends JPanel implements Runnable{
+    private Logger log = Logger.getLogger(LaminaMarcoCliente.class.getName());
     public LaminaMarcoCliente(){
 
         Nombre= new JTextField("Nombre:",5);
@@ -65,7 +69,7 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
     public void run() {
         try{
             ServerSocket servercliente = new ServerSocket(5001);
-
+            log.info("Se conectó con el servidor");
             Socket cliente;
 
             PaqueteEnvio paqueterecibido;
@@ -80,31 +84,42 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
 
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            log.severe(e.getMessage());
         }
     }
 
     private class EnviarTexto implements ActionListener{
+        private Logger log = Logger.getLogger(EnviarTexto.class.getName());
+
+
         @Override
         public void actionPerformed(ActionEvent e){
-            try{
-                Socket misocket = new Socket("192.168.1.76",5000);
+            if(IP.getText()!=""||Nombre.getText()!="") {
+                try {
 
-                PaqueteEnvio datos= new PaqueteEnvio();
+                    Socket misocket = new Socket("192.168.1.76", 5000);
+                    log.info("Conectó con el servidor");
 
-                datos.setIp(IP.getText());
-                datos.setNombre(Nombre.getText());
-                datos.setMensaje(Message.getText());
+                    PaqueteEnvio datos = new PaqueteEnvio();
 
-                Chat.append("\n"+"Yo: "+Message.getText());
+                    datos.setIp(IP.getText());
+                    datos.setNombre(Nombre.getText());
+                    datos.setMensaje(Message.getText());
 
-                ObjectOutputStream PaqueteDatos = new ObjectOutputStream(misocket.getOutputStream());
-                PaqueteDatos.writeObject(datos);
-                misocket.close();
-            }catch(UnknownHostException e1){
-                e1.printStackTrace();
-            }catch(IOException e1){
-                System.out.println(e1.getMessage());
+                    Chat.append("\n" + "Yo: " + Message.getText());
+
+                    ObjectOutputStream PaqueteDatos = new ObjectOutputStream(misocket.getOutputStream());
+                    PaqueteDatos.writeObject(datos);
+                    misocket.close();
+                } catch (UnknownHostException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    log.severe(e1.getMessage());
+                }
+            }else if(Nombre.getText()==""){
+                log.severe("No hay nombre al que asociar el mensaje");
+            }else if (IP.getText()==""){
+                log.severe("No hay IP a la cual enviar el mensaje");
             }
         }
     }

@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
+import java.util.logging.Logger;
+
 public class Servidor {
     public static void main(String[] args){
         MarcoServidor mimarco = new MarcoServidor();
@@ -10,6 +12,7 @@ public class Servidor {
     }
 }
 class MarcoServidor extends JFrame implements Runnable{
+    private Logger log = Logger.getLogger(MarcoServidor.class.getName());
     public MarcoServidor(){
         setBounds(1200,300,280,350);
 
@@ -48,8 +51,8 @@ class MarcoServidor extends JFrame implements Runnable{
 
                 areatexto.append("\n"+nick+": "+mensaje+" para "+ip);
 
-                Socket enviarDestino= new Socket("127.0.0.1",5001);
-
+                Socket enviarDestino= new Socket(ip,5001);
+                log.info("Conectó con el servidor");
                 ObjectOutputStream paquetedestino = new ObjectOutputStream(enviarDestino.getOutputStream());
                 paquetedestino.writeObject(paqueterecibido);
                 enviarDestino.close();
@@ -58,7 +61,7 @@ class MarcoServidor extends JFrame implements Runnable{
                 misocket.close();
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            log.severe(e.getMessage());
         }
 
     }
