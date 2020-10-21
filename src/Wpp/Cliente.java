@@ -20,13 +20,13 @@ import java.util.logging.*;
  */
 
 public class Cliente {
-    public static void main (String[] args){ ;
+    public static void main (String[] args) throws IOException { ;
         MarcoCliente mimarco=new MarcoCliente();
         mimarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
 class MarcoCliente extends JFrame{
-    public MarcoCliente(){
+    public MarcoCliente() throws IOException {
         setBounds(600,300,280,350);
 
         LaminaMarcoCliente milamina = new LaminaMarcoCliente();
@@ -38,14 +38,12 @@ class MarcoCliente extends JFrame{
 
 class LaminaMarcoCliente extends JPanel implements Runnable{
     private Logger LOG = Logger.getLogger(LaminaMarcoCliente.class.getName());
-    Handler fileHandler = null;
-    Handler consoleHandler = null;
 
 
 
-
-    public LaminaMarcoCliente(){
-
+    public LaminaMarcoCliente() throws IOException {
+        FileHandler fileXml = new FileHandler("Logging.xml");
+        LOG.addHandler(fileXml);
         Nombre= new JTextField("Nombre:",5);
         add(Nombre);
 
@@ -102,6 +100,13 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
         @Override
         public void actionPerformed(ActionEvent e){
+            FileHandler fileXml = null;
+            try {
+                fileXml = new FileHandler("Logging.xml");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            LOG.addHandler(fileXml);
             if(IP.getText()!=""||Nombre.getText()!="") {
                 try {
 

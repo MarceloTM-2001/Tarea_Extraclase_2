@@ -15,9 +15,10 @@ public class Servidor {
 }
 class MarcoServidor extends JFrame implements Runnable{
     private final Logger LOG = Logger.getLogger(MarcoServidor.class.getName());
-    FileHandler fileTxt = new FileHandler("Logging.xml");
 
     public MarcoServidor() throws IOException {
+        FileHandler fileXml = new FileHandler("Logging.xml");
+        LOG.addHandler(fileXml);
         setBounds(1200,300,280,350);
 
         JPanel milamina = new JPanel();
