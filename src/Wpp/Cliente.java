@@ -5,11 +5,14 @@
  */
 package Wpp;
 
+
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
+
 
 /**
  *
@@ -17,8 +20,7 @@ import java.util.logging.Logger;
  */
 
 public class Cliente {
-    public static void main (String[] args){
-
+    public static void main (String[] args){ ;
         MarcoCliente mimarco=new MarcoCliente();
         mimarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -35,7 +37,13 @@ class MarcoCliente extends JFrame{
 }
 
 class LaminaMarcoCliente extends JPanel implements Runnable{
-    private Logger log = Logger.getLogger(LaminaMarcoCliente.class.getName());
+    private Logger LOG = Logger.getLogger(LaminaMarcoCliente.class.getName());
+    Handler fileHandler = null;
+    Handler consoleHandler = null;
+
+
+
+
     public LaminaMarcoCliente(){
 
         Nombre= new JTextField("Nombre:",5);
@@ -69,7 +77,7 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
     public void run() {
         try{
             ServerSocket servercliente = new ServerSocket(5001);
-            log.info("Se conectó con el servidor");
+            LOG.info("Se conectó con el servidor");
             Socket cliente;
 
             PaqueteEnvio paqueterecibido;
@@ -84,12 +92,12 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
 
         }catch (Exception e){
-            log.severe(e.getMessage());
+            LOG.severe(e.getMessage());
         }
     }
 
     private class EnviarTexto implements ActionListener{
-        private Logger log = Logger.getLogger(EnviarTexto.class.getName());
+        private Logger LOG = Logger.getLogger(EnviarTexto.class.getName());
 
 
         @Override
@@ -98,7 +106,7 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
                 try {
 
                     Socket misocket = new Socket("192.168.1.76", 5000);
-                    log.info("Conectó con el servidor");
+                    LOG.info("Se conectó con un servidor");
 
                     PaqueteEnvio datos = new PaqueteEnvio();
 
@@ -114,12 +122,12 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
                 } catch (UnknownHostException e1) {
                     e1.printStackTrace();
                 } catch (IOException e1) {
-                    log.severe(e1.getMessage());
+                    LOG.severe(e1.getMessage());
                 }
             }else if(Nombre.getText()==""){
-                log.severe("No hay nombre al que asociar el mensaje");
+                LOG.severe("No hay nombre al que asociar el mensaje");
             }else if (IP.getText()==""){
-                log.severe("No hay IP a la cual enviar el mensaje");
+                LOG.severe("No hay IP a la cual enviar el mensaje");
             }
         }
     }

@@ -1,19 +1,23 @@
 package Wpp;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
+
 
 public class Servidor {
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         MarcoServidor mimarco = new MarcoServidor();
         mimarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
 class MarcoServidor extends JFrame implements Runnable{
-    private Logger log = Logger.getLogger(MarcoServidor.class.getName());
-    public MarcoServidor(){
+    private final Logger LOG = Logger.getLogger(MarcoServidor.class.getName());
+    FileHandler fileTxt = new FileHandler("Logging.xml");
+
+    public MarcoServidor() throws IOException {
         setBounds(1200,300,280,350);
 
         JPanel milamina = new JPanel();
@@ -52,7 +56,7 @@ class MarcoServidor extends JFrame implements Runnable{
                 areatexto.append("\n"+nick+": "+mensaje+" para "+ip);
 
                 Socket enviarDestino= new Socket(ip,5001);
-                log.info("Conectó con el servidor");
+                LOG.info("Conectó con el servidor");
                 ObjectOutputStream paquetedestino = new ObjectOutputStream(enviarDestino.getOutputStream());
                 paquetedestino.writeObject(paqueterecibido);
                 enviarDestino.close();
@@ -61,7 +65,7 @@ class MarcoServidor extends JFrame implements Runnable{
                 misocket.close();
             }
         } catch (IOException | ClassNotFoundException e) {
-            log.severe(e.getMessage());
+            LOG.severe(e.getMessage());
         }
 
     }
